@@ -1,37 +1,43 @@
 #include "s7c-console.hpp"
 
-int s7c_console::fast_agrcmp(char * a, char * b, int b_len)
+#include <string.h>
+#include <sstream>
+
+int s7c_console::fast_argcmp(const char * a, const char * b, int b_len)
 {
     return *(a + b_len) == '\0' && !memcmp(a, b, b_len);
 }
 
 std::vector<std::string> s7c_console::get_args(std::string msg, std::vector<std::string> * v)
 {
-    std::string arg = "";
+    std::string arg;
     std::vector<std::string> args;
     do
     {
         std::cout << msg << " (\"exit\" to cancel):" << std::endl << ">> ";
         getline(std::cin, arg);
-        args = Extract(arg);
+        args = extract(arg);
     }while(arg.empty());
     v->insert(v->end(), args.begin(), args.end());
     return args;
 }
 
-void s7c_console::draw_msg(std::vector<std::string> * v, unsigned int offset_draw, unsigned int offset_pos, unsigned int start, unsigned int length, std::string msg)
+void s7c_console::draw_msg(std::vector<std::string> &args, unsigned int offset_draw, unsigned int offset_pos, unsigned int start, unsigned int length, std::string msg)
 {
     std::string str = "";
-    for (unsigned int i = 0; i < offset_draw; ++i) str.append(" ");
+    for (unsigned int i = 0; i < offset_draw; ++i)
+        str.append(" ");
     for (unsigned int it = offset_pos; it < start; ++it)
     {
-        for (unsigned int i = 0; i < v->at(it).length(); ++i) str.append(" ");
+        for (unsigned int i = 0; i < args[it].length(); ++i)
+            str.append(" ");
         str.append(" ");
     }
     str.append("^");
     for (unsigned int it = start; it < start + length; ++it)
     {
-        for (unsigned int i = 0; i < v->at(it).length(); ++i) str.append("~");
+        for (unsigned int i = 0; i < args[it].length(); ++i)
+            str.append("~");
         str.append("~");
     }
     if (length)
@@ -43,7 +49,7 @@ void s7c_console::draw_msg(std::vector<std::string> * v, unsigned int offset_dra
     std::cerr << msg << std::endl;
 }
 
-std::vector<std::string> s7c_console::Extract(const std::string& Text)
+std::vector<std::string> s7c_console::extract(const std::string& Text)
 {
 	std::vector<std::string> Words;
 	std::istringstream ss(Text);
@@ -52,4 +58,22 @@ std::vector<std::string> s7c_console::Extract(const std::string& Text)
 		Words.push_back(Buf);
 	}
 	return Words;
+}
+
+std::vector<std::string> s7c_console::vectorize_input(const char* prefix)
+{
+    if (prefix) std::cout << prefix;
+    std::string cmd;
+    std::getline(std::cin, cmd);
+    return extract(cmd);
+}
+
+std::vector<std::string> s7c_console::vectorize_input(const char * prefix, std::vector<std::string> &args)
+{
+    if (prefix) std::cout << prefix;
+    std::string cmd;
+    std::getline(std::cin, cmd);
+    std::vector<std::string> v = extract(cmd);
+    args.insert(args.end(), v.begin(), v.end());
+    return args;
 }

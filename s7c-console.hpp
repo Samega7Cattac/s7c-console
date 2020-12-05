@@ -2,20 +2,23 @@
 #define S7C_CONSOLE_HPP
 
 #include <iostream>
-#include <sstream>
 #include <vector>
 
 class s7c_console
 {
 public:
     
-    static int fast_argcmp(char * a, char * b, int b_len);
+    static int fast_argcmp(const char * a, const char * b, int b_len);
     
     static std::vector<std::string> get_args(std::string msg, std::vector<std::string> * v);
     
-    static void draw_msg(std::vector<std::string> * v, unsigned int offset_draw, unsigned int offset_pos, unsigned int start, unsigned int length, std::string msg);
+    static void draw_msg(std::vector<std::string> &args, unsigned int offset_draw, unsigned int offset_pos, unsigned int start, unsigned int length, std::string msg);
     
-    static std::vector<std::string> Extract(const std::string& Text);
+    static std::vector<std::string> extract(const std::string& Text);
+    
+    static std::vector<std::string> vectorize_input(const char * prefix);
+    
+    static std::vector<std::string> vectorize_input(const char * prefix, std::vector<std::string> &args);
 };
 
-#endif
+#endif // S7C_CONSOLE_HPP
