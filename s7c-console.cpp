@@ -8,6 +8,11 @@ int s7c_console::fast_argcmp(const char * a, const char * b, int b_len)
     return *(a + b_len) == '\0' && !memcmp(a, b, b_len);
 }
 
+int s7c_console::sanatized_argcmp(const char * a, const char * b, unsigned int a_len, unsigned int b_len)
+{
+    return a_len == b_len && !memcmp(a, b, b_len);
+}
+
 std::vector<std::string> s7c_console::get_args(std::string msg, std::vector<std::string> * v)
 {
     std::string arg;
@@ -18,6 +23,20 @@ std::vector<std::string> s7c_console::get_args(std::string msg, std::vector<std:
         getline(std::cin, arg);
         args = extract(arg);
     }while(arg.empty());
+    v->insert(v->end(), args.begin(), args.end());
+    return args;
+}
+
+std::vector<std::string> s7c_console::get_args(std::string msg, std::vector<std::string> * v, unsigned int n_args)
+{
+    std::string arg;
+    std::vector<std::string> args;
+    do
+    {
+        std::cout << msg << " (\"exit\" to cancel):" << std::endl << ">> ";
+        getline(std::cin, arg);
+        args = extract(arg);
+    }while(arg.size() < n_args || !fast_argcmp(args[0].c_str(), "exit", 4));
     v->insert(v->end(), args.begin(), args.end());
     return args;
 }
