@@ -45,9 +45,10 @@ char ** get_args(char * msg, unsigned int * argc, char ** old_args)
     return line_extract(line, argc, old_args);
 }
 
-void free_args(char ** args, int * n_args)
+void free_args(char ** args, unsigned int * n_args)
 {
-    for (int i = 0; i < *n_args; ++i) free(args[i]);
+    for (unsigned int i = 0; i < *n_args; ++i)
+        free(args[i]);
     free(args);
     *n_args = 0;
 }
