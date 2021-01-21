@@ -19,7 +19,7 @@ public:
     
     std::vector<std::string> get_args(std::string msg, std::vector<std::string> * v, unsigned int n_args);
     
-    static void draw_msg(std::vector<std::string> &args, unsigned int offset_draw, unsigned int offset_pos, unsigned int start, unsigned int length, std::string msg);
+    static void draw_msg(std::vector<std::string> &args, unsigned int offset_draw, unsigned int offset_pos, unsigned long start, unsigned long length, std::string msg);
     
     static std::vector<std::string> extract(const std::string& Text);
     
