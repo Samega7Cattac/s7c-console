@@ -53,7 +53,7 @@ void s7c_console::draw_msg(std::vector<std::string> &args, unsigned int offset_d
         str.append(" ");
     }
     str.append("^");
-    if (args.size() >= start)
+    if (args.size() > start)
     {
         for (unsigned int it = start; it < start + length; ++it)
         {
