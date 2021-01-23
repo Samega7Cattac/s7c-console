@@ -53,16 +53,19 @@ void s7c_console::draw_msg(std::vector<std::string> &args, unsigned int offset_d
         str.append(" ");
     }
     str.append("^");
-    for (unsigned int it = start; it < start + length; ++it)
+    if (args.size() >= start)
     {
-        for (unsigned int i = 0; i < args[it].length(); ++i)
+        for (unsigned int it = start; it < start + length; ++it)
+        {
+            for (unsigned int i = 0; i < args[it].length(); ++i)
+                str.append("~");
             str.append("~");
-        str.append("~");
-    }
-    if (length)
-    {
-        str.pop_back();
-        str.pop_back();
+        }
+        if (length)
+        {
+            str.pop_back();
+            str.pop_back();
+        }
     }
     std::cout << str << std::endl;
     std::cerr << msg << std::endl;
