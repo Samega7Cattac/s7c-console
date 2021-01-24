@@ -9,7 +9,12 @@ int fast_argcmp(char * a, char * b, int b_len)
     return *(a + b_len) == '\0' && !memcmp(a, b, b_len);
 }
 
-char ** line_extract(char * line, int * n_words, char ** old_args)
+int sanatized_argcmp(char * a, char * b, unsigned int a_len, unsigned int b_len)
+{
+    return a_len == b_len && !memcmp(a, b, b_len);
+}
+
+char ** line_extract(char * line, unsigned int * n_words, char ** old_args)
 {
     char ** argv = NULL;
     if (old_args) argv = old_args;
@@ -25,7 +30,7 @@ char ** line_extract(char * line, int * n_words, char ** old_args)
     return argv;
 }
 
-char ** get_args(char * msg, int * argc, char ** old_args)
+char ** get_args(char * msg, unsigned int * argc, char ** old_args)
 {
     char line[MAX_ARGS] = "\0";
     do
@@ -63,4 +68,17 @@ void draw_msg(char ** args, unsigned int offset_draw, unsigned int offset_pos, u
     if (length) printf("\b\b  ");
     printf("\n");
     fprintf(stderr,"%s\n", msg);
+}
+
+char ** vectorize_input(char * prefix, unsigned int * argc, char ** old_args)
+{
+    if (!old_args) *argc = 0;
+    char line[MAX_ARGS] = "\0";
+    if (prefix)
+    {
+        printf("%s", prefix);
+        fflush(stdout);
+    }
+    fgets(line, MAX_ARGS, stdin);
+    return line_extract(line, argc, old_args);
 }
