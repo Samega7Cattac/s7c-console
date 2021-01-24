@@ -41,7 +41,7 @@ std::vector<std::string> s7c_console::get_args(std::string msg, std::vector<std:
     return args;
 }
 
-void s7c_console::draw_msg(std::vector<std::string> &args, unsigned int offset_draw, unsigned int offset_pos, unsigned int start, unsigned int length, std::string msg)
+void s7c_console::draw_msg(std::vector<std::string> &args, unsigned int offset_draw, unsigned int offset_pos, unsigned long start, unsigned long length, std::string msg)
 {
     std::string str = "";
     for (unsigned int i = 0; i < offset_draw; ++i)
@@ -53,16 +53,19 @@ void s7c_console::draw_msg(std::vector<std::string> &args, unsigned int offset_d
         str.append(" ");
     }
     str.append("^");
-    for (unsigned int it = start; it < start + length; ++it)
+    if (args.size() > start)
     {
-        for (unsigned int i = 0; i < args[it].length(); ++i)
+        for (unsigned int it = start; it < start + length; ++it)
+        {
+            for (unsigned int i = 0; i < args[it].length(); ++i)
+                str.append("~");
             str.append("~");
-        str.append("~");
-    }
-    if (length)
-    {
-        str.pop_back();
-        str.pop_back();
+        }
+        if (length)
+        {
+            str.pop_back();
+            str.pop_back();
+        }
     }
     std::cout << str << std::endl;
     std::cerr << msg << std::endl;
